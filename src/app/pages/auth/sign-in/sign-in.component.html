@@ -1,6 +1,6 @@
 <section class="auth-form">
   <div class="text-center">
-    <h3 class="h3">Login</h3>
+    <h3 class="h3">Sign In</h3>
   </div>
   <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
@@ -33,12 +33,3 @@
       </div>
   </form>
 </section>
-<h5>Form Valid: {{ authForm.valid }} </h5>
-<h5>Form Errors</h5>
-<pre>{{ authForm.errors | json }}</pre>
-
-<h5>Nombre</h5>
-<pre>{{ f['username'].errors | json }}</pre>
-
-<h5>Email</h5>
-<pre>{{ f['password'].errors | json }}</pre>
