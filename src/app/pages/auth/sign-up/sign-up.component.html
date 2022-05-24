@@ -1,0 +1,98 @@
+<section class="auth-form">
+  <div class="text-center">
+    <h3 class="h3">Sign Up</h3>
+  </div>
+  <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label class="form-label">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="username"
+        [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
+      />
+      <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+        <div *ngIf="f['username'].errors['required']">Username is required</div>
+        <div *ngIf="f['username'].errors['minlength']">
+          Username must be at least 6 characters
+        </div>
+        <div *ngIf="f['username'].errors['maxlength']">
+          Username must not exceed 20 characters
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input
+        type="email"
+        class="form-control"
+        formControlName="email"
+        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
+      />
+      <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+        <div *ngIf="f['email'].errors['required']">Email is required</div>
+        <div *ngIf="f['email'].errors['email']">Email is invalid</div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        formControlName="password"
+        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
+      />
+      <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+        <div *ngIf="f['password'].errors['required']">Password is required</div>
+        <div *ngIf="f['password'].errors['minlength']">
+          Password must be at least 6 characters
+        </div>
+        <div *ngIf="f['password'].errors['maxlength']">
+          Username must not exceed 40 characters
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Confirm Password</label>
+      <input
+        type="password"
+        class="form-control"
+        formControlName="password2"
+        [ngClass]="{ 'is-invalid': submitted && f['password2'].errors }"
+      />
+      <div
+        *ngIf="submitted && f['password2'].errors"
+        class="invalid-feedback">
+        <div *ngIf="f['password2'].errors['required']">
+          Confirm Password is required
+        </div>
+        <div *ngIf="f['password2'].errors['matching']">
+          Confirm Password does not match
+        </div>
+      </div>
+    </div>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary">Sign Up</button>
+    </div>
+    <div class="text-center mt-5">
+      <a [routerLink]="['/sign-in']" class="text-black">
+        Already have an account? <small>Sign In here!</small>
+      </a>
+    </div>
+  </form>
+</section>
+<h5>Form Valid: {{ authForm.valid }} </h5>
+<h5>Form Errors</h5>
+<pre>{{ authForm.errors | json }}</pre>
+
+<h5>Nombre</h5>
+<pre>{{ f['username'].errors | json }}</pre>
+
+<h5>Email</h5>
+<pre>{{ f['email'].errors | json }}</pre>
+
+<h5>Email</h5>
+<pre>{{ f['password'].errors | json }}</pre>
+
+<h5>Email</h5>
+<pre>{{ f['password2'].errors | json }}</pre>

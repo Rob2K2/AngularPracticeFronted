@@ -1,0 +1,44 @@
+<section class="auth-form">
+  <div class="text-center">
+    <h3 class="h3">Login</h3>
+  </div>
+  <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Username</label>
+      <input
+        type="text"
+        class="form-control"
+        formControlName="username"
+      />
+      <span class="form-text text-danger" *ngIf="notValidField('username')">
+        Field is required
+      </span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Password</label>
+      <input
+        type="password"
+        class="form-control"
+        formControlName="password"
+      />
+      <span class="form-text text-danger" *ngIf="notValidField('password')">
+        Field is required
+      </span>
+    </div>
+    <div class="d-grid">
+      <button type="submit" class="btn btn-primary">Sign In</button>
+    </div>
+    <div class="text-center mt-5">
+          <a [routerLink]="['/sign-up']" class="text-black">Create new account</a>
+      </div>
+  </form>
+</section>
+<h5>Form Valid: {{ authForm.valid }} </h5>
+<h5>Form Errors</h5>
+<pre>{{ authForm.errors | json }}</pre>
+
+<h5>Nombre</h5>
+<pre>{{ f['username'].errors | json }}</pre>
+
+<h5>Email</h5>
+<pre>{{ f['password'].errors | json }}</pre>
