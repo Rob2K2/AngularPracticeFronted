@@ -1,5 +1,15 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { Router } from '@angular/router';
+
+import Swal from 'sweetalert2';
+
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -7,25 +17,18 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
   styleUrls: ['./sign-in.component.css'],
 })
 export class SignInComponent {
-  // options: OptionsForm = {
-  //   id: ACTIONS.signIn,
-  //   label: ACTIONS.signIn,
-  // };
   submitted = false;
   authForm!: FormGroup;
-  //signIn = ACTIONS.signIn;
-  //@Input() options!: OptionsForm;
 
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(
+    private readonly fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
   }
-
-  // onSubmit(): void {
-  //   console.log('Save', this.authForm.value);
-  //   this.authForm.markAllAsTouched();
-  // }
 
   private initForm(): void {
     this.authForm = this.fb.group({
@@ -34,26 +37,28 @@ export class SignInComponent {
     });
   }
 
-  notValidField(field: string) {
-    return (
-      this.authForm.get(field)?.invalid &&
-      this.authForm.get(field)?.touched
-    );
-  }
-
   get f(): { [key: string]: AbstractControl } {
     return this.authForm.controls;
   }
 
-  onSubmit(): void {
+  onSubmit() {
     this.submitted = true;
-    this.authForm.markAllAsTouched();
     if (this.authForm.invalid) {
       return;
     }
-    console.log(JSON.stringify(this.authForm.value, null, 2));
+
+    const { username, password } = this.authForm.value;
+
+    this.authService.login(username, password).subscribe((ok) => {
+      console.log (ok)
+      if (ok === true) {
+        this.router.navigateByUrl('/home');
+      } else {
+        Swal.fire('Error', ok, 'error')
+      }
+    });
   }
-  
+
   onReset(): void {
     this.submitted = false;
     this.authForm.reset();

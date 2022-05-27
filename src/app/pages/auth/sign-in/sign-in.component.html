@@ -4,15 +4,16 @@
   </div>
   <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Username</label>
+      <label class="form-label">Username</label>
       <input
         type="text"
         class="form-control"
         formControlName="username"
+        [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
       />
-      <span class="form-text text-danger" *ngIf="notValidField('username')">
-        Field is required
-      </span>
+      <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+        <div *ngIf="f['username'].errors['required']">Username is required</div>
+      </div>
     </div>
     <div class="mb-3">
       <label class="form-label">Password</label>
@@ -20,16 +21,17 @@
         type="password"
         class="form-control"
         formControlName="password"
+        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }"
       />
-      <span class="form-text text-danger" *ngIf="notValidField('password')">
-        Field is required
-      </span>
+      <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+        <div *ngIf="f['password'].errors['required']">Password is required</div>
+      </div>
     </div>
     <div class="d-grid">
       <button type="submit" class="btn btn-primary">Sign In</button>
     </div>
     <div class="text-center mt-5">
-          <a [routerLink]="['/sign-up']" class="text-black">Create new account</a>
-      </div>
+      <a routerLink="/sign-up" class="text-black">Create new account</a>
+    </div>
   </form>
 </section>

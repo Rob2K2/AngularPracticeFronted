@@ -1,11 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ValidateTokenGuard } from './guards/validate-token.guard';
 
 const routes: Routes = [
   {
     path: 'home',
     loadChildren: () =>
       import('./pages/home/home.module').then((m) => m.HomeModule),
+    canActivate: [ValidateTokenGuard],
+    canLoad: [ValidateTokenGuard],
   },
   {
     path: 'sign-in',

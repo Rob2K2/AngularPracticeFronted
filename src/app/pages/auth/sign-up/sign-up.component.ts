@@ -13,14 +13,8 @@ import Validation from './validation';
   styleUrls: ['./sign-up.component.css'],
 })
 export class SignUpComponent {
-  // options: OptionsForm = {
-  //   id: ACTIONS.signUp,
-  //   label: ACTIONS.signUp,
-  // };
   submitted = false;
   authForm!: FormGroup;
-  //signIn = ACTIONS.signIn;
-  //@Input() options!: OptionsForm;
 
   constructor(private readonly fb: FormBuilder) {}
 
@@ -56,19 +50,12 @@ export class SignUpComponent {
     );
   }
 
-  // notValidField(field: string) {
-  //   return (
-  //     this.authForm.get(field)?.invalid && this.authForm.get(field)?.touched
-  //   );
-  // }
-
   get f(): { [key: string]: AbstractControl } {
     return this.authForm.controls;
   }
 
   onSubmit(): void {
     this.submitted = true;
-    this.authForm.markAllAsTouched();
     if (this.authForm.invalid) {
       return;
     }
