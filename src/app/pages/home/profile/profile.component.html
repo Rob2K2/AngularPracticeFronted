@@ -1,0 +1,27 @@
+<div class="card mb-3" style="max-width: 540px">
+  <div class="row no-gutters">
+    <div class="col-md-4">
+      <img [src]="userProfile.userImage" class="card-img" alt="..." />
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">User Information</h5>
+        <p class="card-text">
+          Name: <strong>{{ userProfile.name }}</strong>
+        </p>
+        <p class="card-text">
+          Lastame: <strong>{{ userProfile.lastname }}</strong>
+        </p>
+        <p class="card-text">
+          Register Date: <strong>{{ userProfile.registerDate | date}}</strong>
+        </p>
+        <p class="card-text">
+          Email: <strong>{{ userProfile.email }}</strong>
+        </p>
+        <p class="card-text">
+          <small class="text-muted">Last updated 3 mins ago</small>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

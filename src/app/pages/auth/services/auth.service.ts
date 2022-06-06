@@ -28,6 +28,10 @@ export class AuthService {
           this._user = {
             username: resp.username!,
             email: resp.email!,
+            name:resp.name!,
+            lastname: resp.lastname!,
+            registerDate: resp.registerDate!,
+            userImage: resp.userImage!,
           };
         }
       }),
