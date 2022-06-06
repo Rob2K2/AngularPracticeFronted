@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { of, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 
@@ -38,6 +38,14 @@ export class AuthService {
 
   validateToken() {
     return true;
+  }
+
+  validateAuth(): Observable<boolean>  {
+    if (!localStorage.getItem('token')) {
+      return of(false);
+    }
+
+    return of(true);
   }
 
   logout() {
