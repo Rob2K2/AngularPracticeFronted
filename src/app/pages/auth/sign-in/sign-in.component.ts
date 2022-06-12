@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -6,28 +6,43 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
 import Swal from 'sweetalert2';
 
 import { AuthService } from '../services/auth.service';
+import { AppState } from '../../../app.reducer';
+import * as ui from '../../../shared/ui.actions';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.css'],
 })
-export class SignInComponent {
+export class SignInComponent implements OnInit, OnDestroy {
   submitted = false;
   authForm!: FormGroup;
+  loading: boolean = false;
+  uiSubscription!: Subscription;
 
   constructor(
     private readonly fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit(): void {
     this.initForm();
+
+    this.uiSubscription = this.store.select('ui').subscribe((ui) => {
+      this.loading = ui.isLoading;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.uiSubscription.unsubscribe();
   }
 
   private initForm(): void {
@@ -47,14 +62,18 @@ export class SignInComponent {
       return;
     }
 
+    this.store.dispatch(ui.isLoading());
+
     const { username, password } = this.authForm.value;
 
     this.authService.login(username, password).subscribe((ok) => {
-      console.log (ok)
+      console.log(ok);
       if (ok === true) {
+        this.store.dispatch(ui.stopLoading());
         this.router.navigateByUrl('/home');
       } else {
-        Swal.fire('Error', ok, 'error')
+        this.store.dispatch(ui.stopLoading());
+        Swal.fire('Error', ok, 'error');
       }
     });
   }

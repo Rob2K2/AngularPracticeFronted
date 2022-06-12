@@ -28,7 +28,20 @@
       </div>
     </div>
     <div class="d-grid">
-      <button type="submit" class="btn btn-primary">Sign In</button>
+      <button type="submit" 
+              class="btn btn-primary"
+              *ngIf="!loading">
+      Sign In
+      </button>
+    </div>
+    <div class="d-grid">
+      <button type="button" 
+              [disabled]="true"
+              class="btn btn-primary"
+              *ngIf="loading">
+      <i class="fa fa-spin fa-sync"></i>
+      Please wait...
+      </button>
     </div>
     <div class="text-center mt-5">
       <a routerLink="/sign-up" class="text-black">Create new account</a>
