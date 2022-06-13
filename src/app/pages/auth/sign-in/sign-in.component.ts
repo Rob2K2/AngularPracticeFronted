@@ -61,7 +61,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     if (this.authForm.invalid) {
       return;
     }
-
+    // Set isLoading to true in Redux Store
     this.store.dispatch(ui.isLoading());
 
     const { username, password } = this.authForm.value;
@@ -69,6 +69,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     this.authService.login(username, password).subscribe((ok) => {
       console.log(ok);
       if (ok === true) {
+        // Set isLoading to false in Redux Store
         this.store.dispatch(ui.stopLoading());
         this.router.navigateByUrl('/home');
       } else {

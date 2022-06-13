@@ -4,18 +4,20 @@ import { of, Observable } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 
-import { AuthResponse, User } from '../interfaces/interfaces';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../app.reducer';
+import * as authActions from '@auth/auth.actions';
+
+import { User } from '../../../models/user';
+
+import { AuthResponse } from '../interfaces/interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private baseUrl: string = environment.baseUrl;
   private _user!: User;
-
-  get user() {
-    return { ...this._user };
-  }
-
-  constructor(private http: HttpClient) {}
+  
+  constructor(private http: HttpClient, private store: Store<AppState>) {}
 
   login(username: string, password: string) {
     const url = `${this.baseUrl}/auth`;
@@ -28,11 +30,13 @@ export class AuthService {
           this._user = {
             username: resp.username!,
             email: resp.email!,
-            name:resp.name!,
+            name: resp.name!,
             lastname: resp.lastname!,
             registerDate: resp.registerDate!,
             userImage: resp.userImage!,
           };
+          // Add logged user to Store
+          this.store.dispatch(authActions.setUser({ user: this._user }));
         }
       }),
       map((resp) => resp.ok),
@@ -44,7 +48,7 @@ export class AuthService {
     return true;
   }
 
-  validateAuth(): Observable<boolean>  {
+  validateAuth(): Observable<boolean> {
     if (!localStorage.getItem('token')) {
       return of(false);
     }
@@ -54,5 +58,7 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
+    // Remove logged user from Store
+    this.store.dispatch(authActions.unSetUser());
   }
 }
