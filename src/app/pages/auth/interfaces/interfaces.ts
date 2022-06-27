@@ -9,12 +9,3 @@ export interface AuthResponse {
   token?: string;
   msg?: string;
 }
-
-export interface User {
-  username: string;
-  email: string;
-  name: string;
-  lastname: string;
-  registerDate: string;
-  userImage: string;
-}
