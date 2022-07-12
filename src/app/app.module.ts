@@ -10,6 +10,8 @@ import { appReducers } from './app.reducer';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { environment } from '@env/environment';
+import { NgxsModule } from '@ngxs/store';
+import { ItemState } from '@home/items.state';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,7 @@ import { environment } from '@env/environment';
       logOnly: environment.production, // Restrict extension to log-only mode
       autoPause: true, // Pauses recording actions and state changes when the extension window is not open
     }),
+    NgxsModule.forRoot([ItemState])
   ],
   providers: [],
   bootstrap: [AppComponent]
