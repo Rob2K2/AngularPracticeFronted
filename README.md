@@ -92,6 +92,8 @@ To use a real backend, set `useMockAuth: false` in `environment.prod.ts` and run
 http://localhost:5000/api/authentication
 ```
 
+**API contract for backend implementers:** see [docs/api-auth.md](docs/api-auth.md).
+
 ## Project structure
 
 ```
