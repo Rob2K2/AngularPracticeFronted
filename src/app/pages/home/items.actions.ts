@@ -1,5 +1,6 @@
-export class AddItemsAction {
-    static readonly type = '[ITEMS] Add'
+import { createAction, props } from '@ngrx/store';
 
-    constructor(public items: string[]) {}
-}
+export const addItems = createAction(
+  '[Items] Add Items',
+  props<{ items: string[] }>()
+);

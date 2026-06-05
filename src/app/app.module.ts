@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { NavbarModule } from '@shared/navbar/navbar.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { StoreModule } from '@ngrx/store'
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -9,13 +9,19 @@ import { appReducers } from './app.reducer';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { environment } from '@env/environment';
-import { NgxsModule } from '@ngxs/store';
-import { ItemState } from '@home/items.state';
+import { AuthService } from '@auth/services/auth.service';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+
+export function restoreAuthSession(authService: AuthService) {
+  return () => authService.restoreSession();
+}
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
@@ -28,9 +34,20 @@ import { ItemState } from '@home/items.state';
       logOnly: environment.production, // Restrict extension to log-only mode
       autoPause: true, // Pauses recording actions and state changes when the extension window is not open
     }),
-    NgxsModule.forRoot([ItemState])
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: restoreAuthSession,
+      deps: [AuthService],
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,12 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { User } from '../../models/user';
 import { Store } from '@ngrx/store';
-import * as ngxs from '@ngxs/store';
 import { AppState } from '../../app.reducer';
 import { Subscription, Observable } from 'rxjs';
-import { AddItemsAction } from './items.actions';
-import { Select } from '@ngxs/store';
-import { ItemsSelectors } from './items.selectors';
+import { addItems } from './items.actions';
+import { selectItems } from './items.selectors';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +12,7 @@ import { ItemsSelectors } from './items.selectors';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  @Select(ItemsSelectors.getItems) userItems$!: Observable<string[]>;
+  userItems$!: Observable<string[]>;
   private _user!: User;
   userSubscription!: Subscription;
 
@@ -24,7 +22,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   itemsArray: string[] = ['a', 'b'];
 
-  constructor(private store: Store<AppState>, private ngxsStore: ngxs.Store) {}
+  constructor(private store: Store<AppState>) {
+    this.userItems$ = this.store.select(selectItems);
+  }
 
   ngOnInit(): void {
     this.userSubscription = this.store
@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this._user = loggedUser.user!;
       });
 
-    this.ngxsStore.dispatch(new AddItemsAction(this.itemsArray));
+    this.store.dispatch(addItems({ items: this.itemsArray }));
   }
 
   ngOnDestroy(): void {

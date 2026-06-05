@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  baseUrl: 'http://localhost:5000/api/authentication'
+  baseUrl: 'http://localhost:5000/api/authentication',
+  useMockAuth: false,
 };

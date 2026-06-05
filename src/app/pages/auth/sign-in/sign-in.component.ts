@@ -14,6 +14,7 @@ import { AuthService } from '../services/auth.service';
 import { AppState } from '../../../app.reducer';
 import * as ui from '../../../shared/ui.actions';
 import { Subscription } from 'rxjs';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-sign-in',
@@ -25,6 +26,7 @@ export class SignInComponent implements OnInit, OnDestroy {
   authForm!: FormGroup;
   loading: boolean = false;
   uiSubscription!: Subscription;
+  readonly mockAuthEnabled = environment.useMockAuth;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -62,19 +64,22 @@ export class SignInComponent implements OnInit, OnDestroy {
       return;
     }
     // Set isLoading to true in Redux Store
+    this.loading = true;
     this.store.dispatch(ui.isLoading());
 
     const { username, password } = this.authForm.value;
 
     this.authService.login(username, password).subscribe((ok) => {
-      console.log(ok);
       if (ok === true) {
         // Set isLoading to false in Redux Store
+        this.loading = false;
         this.store.dispatch(ui.stopLoading());
         this.router.navigateByUrl('/home');
       } else {
+        this.loading = false;
         this.store.dispatch(ui.stopLoading());
-        Swal.fire('Error', ok, 'error');
+        const message = typeof ok === 'string' ? ok : 'Sign in failed';
+        Swal.fire('Error', message, 'error');
       }
     });
   }

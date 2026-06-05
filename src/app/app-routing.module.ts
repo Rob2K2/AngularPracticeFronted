@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ValidateTokenGuard } from './guards/validate-token.guard';
+import { RootRedirectGuard } from './guards/root-redirect.guard';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 const routes: Routes = [
   {
@@ -20,7 +22,16 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/auth/sign-up/sign-up.module').then((m) => m.SignUpModule),
   },
-  { path: '**', redirectTo: '/home', pathMatch: 'full' },
+  {
+    path: '',
+    pathMatch: 'full',
+    canActivate: [RootRedirectGuard],
+    component: NotFoundComponent,
+  },
+  {
+    path: '**',
+    component: NotFoundComponent,
+  },
 ];
 
 @NgModule({

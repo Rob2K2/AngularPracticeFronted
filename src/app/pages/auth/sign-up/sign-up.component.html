@@ -2,6 +2,9 @@
   <div class="text-center">
     <h3 class="h3">Sign Up</h3>
   </div>
+  <div *ngIf="mockAuthEnabled" class="alert alert-info py-2" role="alert">
+    Demo mode without backend. Registration is saved in your browser.
+  </div>
   <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
       <label class="form-label">Username</label>
@@ -48,7 +51,7 @@
           Password must be at least 6 characters
         </div>
         <div *ngIf="f['password'].errors['maxlength']">
-          Username must not exceed 40 characters
+          Password must not exceed 40 characters
         </div>
       </div>
     </div>
@@ -72,7 +75,19 @@
       </div>
     </div>
     <div class="d-grid">
-      <button type="submit" class="btn btn-primary">Sign Up</button>
+      <button
+        type="submit"
+        class="btn btn-primary d-flex align-items-center justify-content-center gap-2"
+        [disabled]="loading"
+      >
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        <span>{{ loading ? 'Please wait...' : 'Sign Up' }}</span>
+      </button>
     </div>
     <div class="text-center mt-5">
       <a routerLink='/sign-in' class="text-black">

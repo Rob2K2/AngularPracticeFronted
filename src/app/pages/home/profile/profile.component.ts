@@ -1,15 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { User } from 'src/app/models/user';
+import { Component, Input } from '@angular/core';
+import { User } from '../../../models/user';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css'],
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent {
   @Input() userProfile!: User;
 
-  constructor() {}
-
-  ngOnInit(): void {}
+  get avatarUrl(): string {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+      this.userProfile.username
+    )}&background=0D6EFD&color=fff`;
+  }
 }

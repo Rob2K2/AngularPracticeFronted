@@ -1,27 +1,123 @@
-# AngularPractice
+# Angular Practice
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.3.1.
+A small Angular proof-of-concept focused on authentication flow, NgRx state management, lazy-loaded feature modules, and guards. It runs fully in **demo mode** without a backend.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- **Sign in / Sign up** with reactive forms and validation
+- **Mock authentication** (localStorage) for local development
+- **Protected routes** with `CanActivate` / `CanLoad` guards
+- **HTTP interceptor** ready for a real API (`Authorization: Bearer`)
+- **NgRx store** for auth, UI loading, and items
+- **Session restore** on page refresh (`token` + `user`)
+- **404 page** for unknown URLs (with contextual navigation)
+- **Unit tests** for auth reducer, guard, and auth service
 
-## Code scaffolding
+## Tech stack
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Angular 13
+- NgRx Store
+- RxJS
+- Bootstrap 5
+- SweetAlert2
+- Jasmine + Karma
 
-## Build
+## Prerequisites
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **Node.js 16 or 18** (recommended for Angular 13)
+- **npm**
 
-## Running unit tests
+Tests are configured to use **Microsoft Edge** in headless mode if Chrome is not installed.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Getting started
 
-## Running end-to-end tests
+```bash
+npm install
+npm start
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Open [http://localhost:4200](http://localhost:4200).
 
-## Further help
+### Build
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+npm run build
+```
+
+### Tests
+
+Watch mode:
+
+```bash
+npm test
+```
+
+Single run (headless):
+
+```bash
+npm run test:ci
+```
+
+## Demo credentials
+
+| Field    | Value  |
+|----------|--------|
+| Username | `demo` |
+| Password | `demo` |
+
+You can also **register a new account** on `/sign-up`. Users are stored in the browser under `mock-users` and can sign in afterward.
+
+## Routing
+
+| Route       | Access              | Description                          |
+|-------------|---------------------|--------------------------------------|
+| `/`         | Public              | Redirects to `/home` or `/sign-in`   |
+| `/sign-in`  | Public              | Login form                           |
+| `/sign-up`  | Public              | Registration form                    |
+| `/home`     | Authenticated only  | User profile and items list          |
+| `/**`       | Public              | 404 page                             |
+
+## Mock auth
+
+In development (`environment.ts`), `useMockAuth: true` avoids HTTP calls to the API.
+
+- Login and registration are simulated with a short delay
+- Session data is stored in `localStorage` (`token`, `user`)
+- Registered users are persisted in `mock-users`
+- Invalid sessions (e.g. `token` without `user`) trigger logout
+
+To use a real backend, set `useMockAuth: false` in `environment.prod.ts` and run the API at:
+
+```
+http://localhost:5000/api/authentication
+```
+
+## Project structure
+
+```
+src/app/
+├── guards/           # Route guards (auth, root redirect)
+├── interceptors/     # HTTP auth interceptor
+├── pages/
+│   ├── auth/         # Sign in, sign up, auth service
+│   ├── home/         # Dashboard, profile, items
+│   └── not-found/    # 404 page
+├── shared/           # Navbar, UI NgRx slice
+├── models/           # User model
+└── app.reducer.ts    # Root NgRx state
+```
+
+## Scripts
+
+| Command         | Description                    |
+|-----------------|--------------------------------|
+| `npm start`     | Dev server                     |
+| `npm run build` | Production build               |
+| `npm test`      | Unit tests (watch)             |
+| `npm run test:ci` | Unit tests (single run)      |
+
+## Notes
+
+- Profile avatar is generated from the username via [ui-avatars.com](https://ui-avatars.com)
+- Passwords in mock mode are stored in plain text in `localStorage` (PoC only)
+- This project was originally created with Angular CLI 13.3.1

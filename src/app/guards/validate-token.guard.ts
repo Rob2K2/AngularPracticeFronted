@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanLoad, Router } from '@angular/router';
 import { AuthService } from '@auth/services/auth.service';
-import { Observable, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,23 +9,23 @@ import { Observable, tap } from 'rxjs';
 export class ValidateTokenGuard implements CanActivate, CanLoad {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(): Observable<boolean> | boolean {
-    console.log('canActivate');
-    return this.authService.validateAuth().pipe(
-      tap((isAuthenticated) => {
-        if (!isAuthenticated) {
-          this.router.navigate(['/sign-in']);
-        }
-      })
-    );
+  canActivate(): Observable<boolean> {
+    return this.checkAuth();
   }
-  canLoad(): Observable<boolean> | boolean {
-    console.log('canLoad');
+
+  canLoad(): Observable<boolean> {
+    return this.checkAuth();
+  }
+
+  private checkAuth(): Observable<boolean> {
     return this.authService.validateAuth().pipe(
-      tap((isAuthenticated) => {
+      map((isAuthenticated) => {
         if (!isAuthenticated) {
           this.router.navigate(['/sign-in']);
+          return false;
         }
+
+        return true;
       })
     );
   }

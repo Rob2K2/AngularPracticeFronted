@@ -2,6 +2,9 @@
   <div class="text-center">
     <h3 class="h3">Sign In</h3>
   </div>
+  <div *ngIf="mockAuthEnabled" class="alert alert-info py-2" role="alert">
+    Demo mode without backend. Use <strong>demo</strong> / <strong>demo</strong>
+  </div>
   <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
     <div class="mb-3">
       <label class="form-label">Username</label>
@@ -28,19 +31,18 @@
       </div>
     </div>
     <div class="d-grid">
-      <button type="submit" 
-              class="btn btn-primary"
-              *ngIf="!loading">
-      Sign In
-      </button>
-    </div>
-    <div class="d-grid">
-      <button type="button" 
-              [disabled]="true"
-              class="btn btn-primary"
-              *ngIf="loading">
-      <i class="fa fa-spin fa-sync"></i>
-      Please wait...
+      <button
+        type="submit"
+        class="btn btn-primary d-flex align-items-center justify-content-center gap-2"
+        [disabled]="loading"
+      >
+        <span
+          *ngIf="loading"
+          class="spinner-border spinner-border-sm"
+          role="status"
+          aria-hidden="true"
+        ></span>
+        <span>{{ loading ? 'Please wait...' : 'Sign In' }}</span>
       </button>
     </div>
     <div class="text-center mt-5">

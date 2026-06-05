@@ -1,6 +1,22 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
+const fs = require('fs');
+
+const browserCandidates = [
+  process.env.CHROME_BIN,
+  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+].filter(Boolean);
+
+const browserPath = browserCandidates.find((candidate) => fs.existsSync(candidate));
+
+if (browserPath) {
+  process.env.CHROME_BIN = browserPath;
+}
+
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -13,16 +29,11 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     client: {
-      jasmine: {
-        // you can add configuration options for Jasmine here
-        // the possible options are listed at https://jasmine.github.io/api/edge/Configuration.html
-        // for example, you can disable the random execution with `random: false`
-        // or set a specific seed with `seed: 4321`
-      },
-      clearContext: false // leave Jasmine Spec Runner output visible in browser
+      jasmine: {},
+      clearContext: false
     },
     jasmineHtmlReporter: {
-      suppressAll: true // removes the duplicated traces
+      suppressAll: true
     },
     coverageReporter: {
       dir: require('path').join(__dirname, './coverage/angular-practice'),
@@ -37,7 +48,13 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromiumHeadless'],
+    customLaunchers: {
+      ChromiumHeadless: {
+        base: 'ChromeHeadless',
+        flags: ['--headless', '--disable-gpu', '--disable-dev-shm-usage'],
+      },
+    },
     singleRun: false,
     restartOnFileChange: true
   });
